@@ -304,6 +304,8 @@
   async function getVideoData(size = 20) {
     let data = []
 
+    let currentDay = new Date().toISOString().slice(0,10).replace(/-/g,"");
+
     const videoTimeRange = window.localStorage.getItem('video-time-range');
     const type = ['', '5分钟以下的', '5-10分钟的', '10-30分钟的', '30分钟以上的']
     const videoTimeRangeType = type[videoTimeRange - 1]
@@ -332,6 +334,12 @@
             break;
         }
       }
+
+      res = res.filter(item => {
+        let videoDay = new Date(item.pubdate * 1000).toISOString().slice(0,10).replace(/-/g,""); 
+        return currentDay - videoDay <= 1 ; 
+      })
+
       data.push(...res);
     }
     setLoading(false);
